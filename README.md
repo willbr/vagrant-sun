@@ -1,0 +1,2 @@
+# vagrant-sun
+Golden Story
