@@ -30,9 +30,9 @@ Golden Sun
 Worms
 XCOM
 Advance Wars
-Super Mario RPG
 FF Tactics
 Warioland
+Mario + Rabbids
 
 # themes
 magic
