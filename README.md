@@ -1,6 +1,8 @@
 # vagrant-sun
 Golden Story
 
+![game sketch](vagrant-sun.png)
+
 # tech
 3D effects
 turn based
