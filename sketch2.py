@@ -1,8 +1,9 @@
 import pyxel
 import math
 
-x_offset = 31
+x_offset = 16
 shear = 0
+auto = True
 
 pyxel.init(320, 144, title="gameboy", fps=60)
 pyxel.camera(-80, 0)
@@ -13,34 +14,49 @@ pyxel.image(0).load(0, 32, "images/actors.png")
 def update():
     global x_offset
     global shear
+    global auto
 
     if pyxel.btnp(pyxel.KEY_Q):
         pyxel.quit()
 
-    if pyxel.btn(pyxel.KEY_LEFT):
+    if pyxel.btnp(pyxel.KEY_LEFT):
         x_offset -= 1
 
-    if pyxel.btn(pyxel.KEY_RIGHT):
+    if pyxel.btnp(pyxel.KEY_RIGHT):
         x_offset += 1
 
-    #x_offset += 1
-    x_offset %= 32
+    if pyxel.btnp(pyxel.KEY_SPACE):
+        auto = not auto
+
+    if auto:
+        x_offset -= 1
+
+    x_offset %= (16 * 3)
     shear = 0.05 * (x_offset - 16)
 
 
 def draw():
     pyxel.cls(0)
     #background()
-    floor()
     #ceiling()
     #actors()
 
+
     if False:
-        pyxel.rect(-80, 0, 80, 144, 0)
-        pyxel.rect(160, 0, 80, 144, 0)
+        pyxel.line(-16,0, -16,140, 2)
+        pyxel.line(+16,0, +16,140, 2)
+        pyxel.line(+32,0, +32,140, 2)
+
+    floor()
 
     pyxel.line(0,0, 0, 144, 2)
     pyxel.line(160,0, 160, 144, 2)
+
+    if True:
+        pyxel.rect(-80, 0, 80, 144, 3)
+        pyxel.rect(160, 0, 80, 144, 3)
+
+    pyxel.rect(80, 80, 2, 2, 5)
 
     pyxel.text(4,4, f"{x_offset}\n{shear:+2.2f}", 2)
 
@@ -53,14 +69,23 @@ def background():
         dst_y += 1
 
 def floor():
-    global shear
-    dst_y = 80
     src_y = 0
+    y = 80
+
+
     for i in range(32):
-        x = (shear * i) + x_offset - 32
-        y = dst_y + i
+        x = (shear * i) + x_offset - 64
+        x /=  4
+        y += 1
+        pyxel.blt(x, y, 0, 0, src_y, 224, 1)
+        y += 1
         pyxel.blt(x, y, 0, 0, src_y, 224, 1)
         src_y += 1
+
+    i = 0
+    x = (shear * i) + x_offset - 64
+    y = 80
+    pyxel.rect(x, y, 10, 10, 5)
 
 
 def ceiling():
