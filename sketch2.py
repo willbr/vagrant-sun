@@ -8,7 +8,7 @@ auto = True
 
 ax, ay = 140, 90
 
-pyxel.init(256, 144, title="gameboy", fps=15, display_scale=2)
+pyxel.init(256, 144, title="gameboy", fps=15, display_scale=5)
 pyxel.camera(-48, 0)
 
 pyxel.image(0).load(0, 0, "images/background3.png")
