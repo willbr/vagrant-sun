@@ -1,29 +1,57 @@
 import pyxel
 import math
+import os
 
-shear_limit = 1
-shear_step = 0.1
+shear_limit = 10
+shear_step = 1
 shear = 0
 auto = True
 
 ax, ay = 140, 90
+ax_step = 32
 
-pyxel.init(256, 144, title="gameboy", fps=15, display_scale=2)
+pyxel.init(256, 144, title="gameboy", fps=15, display_scale=4)
 pyxel.camera(-48, 0)
 
-pyxel.image(0).load(0, 0, "images/background3.png")
+background_path =  "images/background3.png"
+
+old_stamp = os.stat(background_path).st_mtime
+
+def load_background():
+    pyxel.image(0).load(0, 0, background_path)
+
+    pyxel.image(0).blt(128, 0, 0, 0, 0, -128, 32)
+
+    #blt(x, y, img, u, v, w, h, [colkey])
+
+load_background()
 pyxel.image(0).load(0, 32, "images/actors.png")
 
 def update():
     global auto
     global shear
     global ax
+    global ax_step
+    global old_stamp
+
+    stamp = os.stat(background_path).st_mtime
+    if stamp != old_stamp:
+        try:
+            load_background()
+            old_stamp = stamp
+        except:
+            pass
+
+    if pyxel.btnp(pyxel.KEY_UP):
+        ax_step += 1
+    if pyxel.btnp(pyxel.KEY_DOWN):
+        ax_step -= 1
 
     if pyxel.btnp(pyxel.KEY_LEFT):
-        shear -= shear_step
+        pass
 
     if pyxel.btnp(pyxel.KEY_RIGHT):
-        shear += shear_step
+        pass
 
     if pyxel.btnp(pyxel.KEY_SPACE):
         auto = not auto
@@ -31,14 +59,15 @@ def update():
     if auto:
         shear -= shear_step
 
-    if shear < -shear_limit:
-        shear = shear_limit
-    elif shear > shear_limit:
-        shear = -shear_limit
+    if shear <= -shear_limit:
+        shear = 0
+    elif shear >= shear_limit:
+        shear = 0
 
-    ax -= 3.2
-    if ax < -40:
-        ax = 160
+    if auto:
+        ax -= ax_step >> 3
+        if ax < -40:
+            ax = 160
 
 
 def draw():
@@ -64,11 +93,12 @@ def draw():
 
     #pyxel.rect(48, 48, 2, 2, 5)
 
-    pyxel.text(-40,4, f"{shear:+2.2f}", 2)
+    pyxel.text(-40,4, f"{shear:+2d}", 2)
+    pyxel.text(-40,8, f"{ax_step:+2d}", 2)
 
 def floor(y, stop, step):
     src_y = 0
-    x = (16 * shear) - 48
+    x = (16 * shear/10) - 48
 
 
     for i in range(0, stop, step):
@@ -78,7 +108,7 @@ def floor(y, stop, step):
         y += step
 
         if y % 2 == 0:
-            x += shear
+            x += shear/10
 
         src_y += 1
 
