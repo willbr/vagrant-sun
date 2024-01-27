@@ -10,7 +10,7 @@ auto = True
 ax, ay = 140, 90
 ax_step = 32
 
-pyxel.init(256, 144, title="gameboy", fps=15, display_scale=4)
+pyxel.init(256, 144, title="gameboy", fps=15, display_scale=5)
 pyxel.camera(-48, 0)
 
 background_path =  "images/background3.png"
